@@ -25,10 +25,10 @@ function setup() {
   background(0);
   noLoop()
 
-  A = createVector(0,10);
-  B = createVector(15,40);
-  C = createVector(60,32);
-  D = createVector(40,0);
+  A = createVector(0,30);
+  B = createVector(15,0);
+  C = createVector(60,8);
+  D = createVector(40,40);
 
   S = createVector(0,0);
   borderPoints = [A,B,C,D];
@@ -167,11 +167,40 @@ function draw() {
   fill(0,200,0);
   text(`Shortest Distance: ${low.toFixed(2)}, x: ${lowPos.x.toFixed(2)} , y: ${lowPos.y.toFixed(2)}.`, 
     g_width / 2, 
-    g_height + 8);
+    g_height + 10);
   fill(200,0,0);
   text(`Longest Distance: ${high.toFixed(2)}, x: ${highPos.x.toFixed(2)} , y: ${highPos.y.toFixed(2)}.`,
     g_width / 2, 
-    g_height + 14);
+    g_height + 16);
+
+
+  // Origin
+  textSize(2);
+  fill(100);
+  text(`(0,0)`, -3, -2)
+
+  // Distances
+  textSize(2.5);
+  fill(150);
+  text("30", -3, 15);
+  text("10", -3, 36.5);
+  text("8", g_width + 3, 4);
+  text("32", g_width + 3, 24);
+  text("15", 7.5, -2);
+  text("45", 38, -2);
+  text("40", 20, g_height + 3.5);
+  text("20", 50, g_height + 3.5);
+
+  // Points
+  textSize(2.5);
+  fill(220);
+  text("A", A.x, A.y+0.8);
+  text("B", B.x, B.y+0.8);
+  text("C", C.x, C.y+0.8);
+  text("D", D.x, D.y+0.8);
+  fill(20);
+  text("S", lowPos.x, lowPos.y+0.8);
+
 
 
   // Save out to image!
