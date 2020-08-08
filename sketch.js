@@ -12,7 +12,7 @@ let D;
 let S;
 
 var borderPoints;
-var step = 0.10;
+var step = 0.5;
 var heatMap;
 var low = 100000;
 var high = 0;
@@ -42,9 +42,9 @@ function setup() {
   lowPos = createVector(0,0);
   highPos = createVector(0,0);
 
-  for (x = 0; x < g_width; x += step) {
+  for (x = 0; x <= g_width; x += step) {
     var heightArray = []
-    for (y = 0; y < g_height; y += step) {
+    for (y = 0; y <= g_height; y += step) {
       S.x = x;
       S.y = y;
       d = calcTotalDistance()
@@ -87,16 +87,31 @@ function draw() {
 
   
   // Offset and scale
-  let x = (width - (g_width * g_viewMultiplier))/2
-  let y = (height - (g_height * g_viewMultiplier))/2
-  translate(x,y);
+  let xScaler = (width - (g_width * g_viewMultiplier))/2
+  let yScaler = (height - (g_height * g_viewMultiplier))/2
+  translate(xScaler,yScaler - 50);
   scale(g_viewMultiplier, g_viewMultiplier);
   
+
+
+
   // Draw the heat map.
-  for (i = 0; i < g_width; i += step) {
-    for (j = 0; j < g_height; j += step) {
-    
+  var i = 0;
+  var j = 0;
+
+  for (x = 0; x <= g_width; x += step) {
+    for (y = 0; y <= g_height; y += step) {
+      // Scale this from 0 to 1
+      let v = (heatMap[i][j] - low) / (high - low)
+      let c = lerp(255,0, v)
+      noStroke()
+      fill(0,0,c)
+      rect(x,y,step,step)
+
+      j += 1
     }
+
+    i += 1
   }
 
 
@@ -106,22 +121,21 @@ function draw() {
   noFill()
   rect(0,0, g_width, g_height)
 
-
-  // Draw the four lines (low)
-  stroke(0,200,0)
-  strokeWeight(0.25)
-  line(A.x, A.y, lowPos.x, lowPos.y);
-  line(B.x, B.y, lowPos.x, lowPos.y);
-  line(C.x, C.y, lowPos.x, lowPos.y);
-  line(D.x, D.y, lowPos.x, lowPos.y);
-
   // Draw the four lines (high)
   stroke(200,0,0)
-  strokeWeight(0.25)
+  strokeWeight(0.5)
   line(A.x, A.y, highPos.x, highPos.y);
   line(B.x, B.y, highPos.x, highPos.y);
   line(C.x, C.y, highPos.x, highPos.y);
   line(D.x, D.y, highPos.x, highPos.y);
+
+    // Draw the four lines (low)
+    stroke(0,200,0)
+    strokeWeight(0.5)
+    line(A.x, A.y, lowPos.x, lowPos.y);
+    line(B.x, B.y, lowPos.x, lowPos.y);
+    line(C.x, C.y, lowPos.x, lowPos.y);
+    line(D.x, D.y, lowPos.x, lowPos.y);
 
 
   // Draw the border points:
@@ -151,11 +165,17 @@ function draw() {
   textSize(4);
   textAlign(CENTER);
   fill(0,200,0);
-  text(`Shortest Distance: ${low.toFixed(4)}.`, g_width / 2, g_height + 8);
+  text(`Shortest Distance: ${low.toFixed(2)}, x: ${lowPos.x.toFixed(2)} , y: ${lowPos.y.toFixed(2)}.`, 
+    g_width / 2, 
+    g_height + 8);
   fill(200,0,0);
-  text(`Longest Distance: ${high.toFixed(4)}.`, g_width / 2, g_height + 14);
+  text(`Longest Distance: ${high.toFixed(2)}, x: ${highPos.x.toFixed(2)} , y: ${highPos.y.toFixed(2)}.`,
+    g_width / 2, 
+    g_height + 14);
 
 
+  // Save out to image!
+  // saveCanvas("result", "png");
 }
 
 function calcTotalDistance() {
